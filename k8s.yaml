@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitops-webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gitops-webapp
+  template:
+    metadata:
+      labels:
+        app: gitops-webapp
+    spec:
+      containers:
+      - name: webapp
+        # 注意這裡！CI 機器人等一下會自動來把 TAG_PLACEHOLDER 替換成最新的版本號
+        image: wintertreee/gitops-webapp:TAG_PLACEHOLDER
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitops-webapp-svc
+spec:
+  selector:
+    app: gitops-webapp
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30088
+  type: NodePort
