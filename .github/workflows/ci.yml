@@ -1,0 +1,40 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ] # 如果你的主分支叫 master，請改成 master
+    paths-ignore:
+      - 'k8s.yaml' # 🌟 SRE 必備細節：避免機器人修改 k8s.yaml 後，又觸發自己造成無限迴圈！
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 1. 下載最新程式碼
+        uses: actions/checkout@v3
+
+      - name: 🔑 2. 登入 Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 📦 3. 依照食譜打包，並推送到 Docker Hub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          # 使用 GitHub 這次 commit 的專屬亂碼 (sha) 當作版本號
+          tags: wintertreee/gitops-webapp:${{ github.sha }}
+
+      - name: 📝 4. GitOps 魔法：自動更新 k8s.yaml 裡的 Image 版本
+        run: |
+          # 尋找並取代 image 那行
+          sed -i "s|wintertreee/gitops-webapp:.*|wintertreee/gitops-webapp:${{ github.sha }}|g" k8s.yaml
+          
+          # 機器人自動發出 Commit
+          git config --global user.name "GitHub Actions Robot"
+          git config --global user.email "actions@github.com"
+          git add k8s.yaml
+          git commit -m "🤖 自動更新 Image 版本至 ${{ github.sha }}"
+          git push
