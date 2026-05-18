@@ -25,12 +25,12 @@ jobs:
           context: .
           push: true
           # 使用 GitHub 這次 commit 的專屬亂碼 (sha) 當作版本號
-          tags: wintertreee/gitops-webapp:${{ github.sha }}
+          tags: mudd886asme7/gitops-webapp:${{ github.sha }}
 
       - name: 📝 4. GitOps 魔法：自動更新 k8s.yaml 裡的 Image 版本
         run: |
           # 尋找並取代 image 那行
-          sed -i "s|wintertreee/gitops-webapp:.*|wintertreee/gitops-webapp:${{ github.sha }}|g" k8s.yaml
+          sed -i "s|mudd886asme7/gitops-webapp:.*|mudd886asme7/gitops-webapp:${{ github.sha }}|g" k8s.yaml
           
           # 機器人自動發出 Commit
           git config --global user.name "GitHub Actions Robot"
