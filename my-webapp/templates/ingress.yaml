@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-gitops-webapp-ingress
+  namespace: terraform-practice
+spec:
+  # 🌟 指定要交給哪位總機小姐 (剛剛請來的 NGINX)
+  ingressClassName: nginx
+  rules:
+  # 🌟 魔法在這裡：我們不要寫死網域，去讀取 values.yaml
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            # 🌟 總機看到上面的網域，就會把流量轉交給這個 Service
+            name: my-gitops-webapp-service
+            port:
+              number: 80
