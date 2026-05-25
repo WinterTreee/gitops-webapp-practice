@@ -15,7 +15,7 @@ spec:
       containers:
       - name: webapp
         # 注意這裡！CI 機器人等一下會自動來把 TAG_PLACEHOLDER 替換成最新的版本號
-        image: mudd886asme7/gitops-webapp:49fb0af560ed9610e572ad6ef301033a5e1a4ff7
+        image: mudd886asme7/gitops-webapp:7ec71d71106abe1853da1bd1e00017f885f6c0ff
         ports:
         - containerPort: 80
 ---
