@@ -7,3 +7,12 @@ image:
 
 ingress:
   host: "v2.mywebapp.local"
+
+# 🌟 補上資源配額宣告
+resources:
+  requests:
+    cpu: "10m"      # 10m = 0.01 顆 CPU (保證分配)
+    memory: "32Mi"  # 32 MB 記憶體 (保證分配)
+  limits:
+    cpu: "50m"      # 最多只能吃到 0.05 顆 CPU，超過就限制速度
+    memory: "64Mi"  # 最多吃到 64 MB，超過就被 K8S 殺掉重啟 (OOMKilled)
