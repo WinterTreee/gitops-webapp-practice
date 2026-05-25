@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: gitops-webapp
 spec:
-  replicas: 6
+  replicas: 5
   selector:
     matchLabels:
       app: gitops-webapp
