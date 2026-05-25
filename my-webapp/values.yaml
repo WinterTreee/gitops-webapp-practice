@@ -4,3 +4,6 @@ replicaCount: 2
 image:
   repository: nginx
   tag: "alpine"
+
+ingress:
+  host: "v2.mywebapp.local"
