@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-gitops-webapp
+  namespace: terraform-practice # 👈 精準放入被 Terraform 保護的隔離區
+spec:
+  # 🌟 讀取 values.yaml 裡面的 replicaCount
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        # 🌟 動態組合 Image 名稱與版本號
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 80
